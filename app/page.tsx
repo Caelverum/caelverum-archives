@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import Link from 'next/link';
 
 type Article = {
   slug: string;
@@ -18,22 +17,15 @@ type Article = {
 
 export default function Home() {
   const [articles, setArticles] = useState<Article[]>([]);
-  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // For now we hardcode the list while we finish the architecture.
-    // Later this will be fully dynamic.
     async function loadArticles() {
       try {
         const res = await fetch('/api/articles');
         if (res.ok) {
           const data = await res.json();
           setArticles(data);
-        } else {
-          // Temporary fallback while we set up the API route
-          setArticles([]);
         }
       } catch (err) {
         console.error(err);
@@ -44,18 +36,6 @@ export default function Home() {
 
     loadArticles();
   }, []);
-
-  const openArticle = (article: Article) => {
-    setSelectedArticle(article);
-    setIsExpanded(false);
-  };
-
-  const closeArticle = () => {
-    setSelectedArticle(null);
-    setIsExpanded(false);
-  };
-
- const displayArticles = articles;
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
@@ -120,10 +100,10 @@ export default function Home() {
           </div>
 
           <div className="flex gap-5 overflow-x-auto pb-4 scrollbar-hide snap-x">
-            {displayArticles.map((article) => (
-              <div
+            {articles.map((article) => (
+              <Link
                 key={article.slug}
-                onClick={() => openArticle(article)}
+                href={`/articles/${article.slug}`}
                 className="flex-shrink-0 w-[220px] sm:w-[240px] md:w-[260px] cursor-pointer group snap-start"
               >
                 <div className="overflow-hidden rounded-lg bg-zinc-900 aspect-[3/4]">
@@ -142,98 +122,43 @@ export default function Home() {
                     {article.author} · {article.readTime}
                   </p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
       </section>
 
-      {/* DETAIL MODAL */}
-      {selectedArticle && (
-        <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
-          <div className="bg-zinc-950 max-w-5xl w-full max-h-[92vh] overflow-hidden rounded-xl border border-zinc-800 relative flex flex-col md:flex-row">
-            
-            <button
-              onClick={closeArticle}
-              className="absolute top-5 right-5 text-2xl z-20 hover:text-amber-400"
-            >
-              ×
-            </button>
-
-            {/* LEFT - Cover */}
-            <div className="md:w-1/2 bg-zinc-900 flex-shrink-0">
-              <img
-                src={selectedArticle.cover}
-                alt={selectedArticle.title}
-                className="w-full h-full object-cover min-h-[400px] md:min-h-full"
-              />
-            </div>
-
-            {/* RIGHT - Content */}
-            <div className="md:w-1/2 p-8 md:p-10 flex flex-col overflow-y-auto max-h-[92vh]">
-              <p className="text-xs tracking-widest text-amber-500 mb-3">
-                {selectedArticle.category}
-              </p>
-              <h1 className="text-2xl md:text-3xl font-light leading-tight mb-3">
-                {selectedArticle.title}
-              </h1>
-              <p className="text-zinc-400 text-sm mb-6">
-                By {selectedArticle.author} · {selectedArticle.date} · {selectedArticle.readTime}
-              </p>
-
-            <div className="text-zinc-300 leading-relaxed mb-8 flex-1 article-content">
-  {isExpanded ? (
-    <ReactMarkdown
-      remarkPlugins={[remarkGfm]}
-      components={{
-        h2: ({node, ...props}) => (
-          <h2 className="text-xl md:text-2xl font-light text-amber-400 mt-10 mb-4 tracking-tight" {...props} />
-        ),
-        h3: ({node, ...props}) => (
-          <h3 className="text-lg font-medium text-white mt-8 mb-3" {...props} />
-        ),
-        p: ({node, ...props}) => (
-          <p className="mb-5 leading-7 text-[15px]" {...props} />
-        ),
-        strong: ({node, ...props}) => (
-          <strong className="text-white font-medium" {...props} />
-        ),
-        blockquote: ({node, ...props}) => (
-          <blockquote className="border-l-2 border-amber-500 bg-zinc-900/40 py-2 px-4 my-6 rounded-r text-zinc-300" {...props} />
-        ),
-        hr: () => null, // completely hide horizontal lines
-      }}
-    >
-      {selectedArticle.content || selectedArticle.excerpt}
-    </ReactMarkdown>
-  ) : (
-    <div className="whitespace-pre-line leading-7 text-[15px]">{selectedArticle.excerpt}</div>
-  )}
-</div>
-              <div className="flex flex-wrap gap-3 mb-6">
-                <button
-                  onClick={() => setIsExpanded(!isExpanded)}
-                  className="bg-amber-500 hover:bg-amber-400 text-black px-6 py-3 rounded text-sm font-medium"
+      {/* HUMAN BEHAVIOUR ROW */}
+      <section className="pb-20">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex items-end justify-between mb-5">
+            <h2 className="text-xl font-light tracking-wide">Human Behaviour</h2>
+            <a href="#" className="text-sm text-amber-400 hover:underline">View All</a>
+          </div>
+          <div className="flex gap-5 overflow-x-auto pb-2 scrollbar-hide">
+            {articles
+              .filter((a) => a.category === "HUMAN BEHAVIOUR")
+              .map((article) => (
+                <Link
+                  key={article.slug}
+                  href={`/articles/${article.slug}`}
+                  className="flex-shrink-0 w-[200px] cursor-pointer group"
                 >
-                  {isExpanded ? "SHOW LESS" : "READ FULL ARTICLE"}
-                </button>
-                <button className="border border-zinc-600 hover:border-amber-400 px-6 py-3 rounded text-sm">
-                  DOWNLOAD PDF
-                </button>
-              </div>
-
-             <div className="flex items-center gap-4 text-sm text-zinc-500">
-  <span>Share</span>
-  <a href="#" className="hover:text-amber-400">X</a>
-  <a href="#" className="hover:text-amber-400">LinkedIn</a>
-  <a href="#" className="hover:text-amber-400">Instagram</a>
-  <a href="#" className="hover:text-amber-400">Facebook</a>
-  <a href="#" className="hover:text-amber-400">Email</a>
-</div>
-            </div>
+                  <div className="overflow-hidden rounded-lg aspect-[3/4] bg-zinc-900">
+                    <img
+                      src={article.cover}
+                      alt={article.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                  </div>
+                  <h3 className="mt-2.5 text-sm leading-snug group-hover:text-amber-400 line-clamp-2">
+                    {article.title}
+                  </h3>
+                </Link>
+              ))}
           </div>
         </div>
-      )}
+      </section>
     </div>
   );
 }
