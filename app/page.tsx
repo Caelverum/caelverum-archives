@@ -1,141 +1,53 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 type Article = {
-  id: number;
+  slug: string;
   title: string;
   author: string;
-  excerpt: string;
-  content: string;
-  cover: string;
   category: string;
   date: string;
   readTime: string;
+  cover: string;
+  excerpt: string;
+  content: string;
 };
 
-const articles: Article[] = [
-  {
-    id: 1,
-    title: "The Tall Poppy Paradox and the Slow Erosion of the Australian Spirit",
-    author: "Brian Pearce",
-    excerpt: "A joke that isn't quite a joke — and why it matters more than we admit.",
-    content: `It happens in a thousand small ways. A colleague gets promoted and someone mutters that she "must have kissed the right arse." A mate buys a nice car and cops six months of "look at Mr Fancy." A teenager wins a scholarship and learns to shrug it off.
-
-We call this tall poppy syndrome, and mostly we treat it as harmless larrikin banter.
-
-But what if the reflex to cut down the tall poppy isn't just a joke? What if it's a quiet cultural machinery that trains a whole nation to keep its head down?
-
-The fair go was meant to lift the floor. The tall poppy reflex, at its worst, lowers the ceiling.
-
-Healthy egalitarianism attacks unearned privilege. Corrosive leveling attacks excellence itself.
-
-We don't decide to become smaller. We agree to it, one shrug at a time.`,
-    cover: "/Tall Poppy Article Cover Art (1).png",
-    category: "HUMAN BEHAVIOUR",
-    date: "May 12, 2025",
-    readTime: "8 min read",
-  },
-  {
-    id: 2,
-    title: "The Mind-Zillionaires: Inside the Secret Class That Owns the Ultimate Luxury—Their Own Attention",
-    author: "Brian Pearce",
-    excerpt: "The rarest commodity in the modern world is not money. It is focused attention.",
-    content: `On a yacht off the coast of Montenegro, a man named Julian watches monitors — not markets, but desalination plants and geothermal vents.
-
-His net worth is in the hundreds of millions, yet he owns almost nothing public. He lives in a state of "surgical availability."
-
-He belongs to a nearly invisible class now being called the Mind-Zillionaires.
-
-They have realised that the ultimate currency is no longer money or land. It is radical mastery of time, attention, and the choice of whether to participate at all.
-
-If the traditional elite are defined by what they own, the Mind-Zillionaire is defined by what they refuse to be bothered by.
-
-Wealth, one of them says, is the distance between a stimulus and your response.`,
-    cover: "/Mind Zillionaire Cover Art (1).png",
-    category: "PSYCHOLOGY",
-    date: "May 10, 2025",
-    readTime: "9 min read",
-  },
-  {
-    id: 3,
-    title: "Can Transformation Be Designed?",
-    author: "Soozhee Low Pearce",
-    excerpt: "What if organisational and personal change wasn’t left to chance?",
-    content: `What if transformation wasn’t something that happens to us — but something we can deliberately design?
-
-Most organisational change fails not because people resist it, but because the change itself is poorly designed. We treat transformation as a motivational exercise rather than an architectural one.
-
-The State A to State B Bridge is a simple idea: every meaningful transformation needs a designed path between where we are and where we need to be.
-
-Without that path, people either freeze or flail.
-
-Transformation can be designed — not perfectly, but deliberately, iteratively, and with far greater success than the usual “vision + hope” model.`,
-    cover: "/Can transformation cover art (1).png",
-    category: "TRANSFORMATIVE DESIGN",
-    date: "May 8, 2025",
-    readTime: "7 min read",
-  },
-  {
-    id: 4,
-    title: "The Permission Trap: When the Child Who Grew Up Still Has to Ask",
-    author: "Soozhee Low Pearce",
-    excerpt: "Some adults never stop asking for permission — even when no one is left to give it.",
-    content: `Some of us grow up but never leave the child’s seat at the table.
-
-We still wait for someone to tell us it’s okay. We still need the nod, the approval, the green light — even when the original authority figures are long gone.
-
-The Permission Trap is the quiet inheritance of childhoods where autonomy was withheld or punished. As adults we continue outsourcing our authority.
-
-The way out is not rebellion. It is the slow, deliberate practice of granting yourself the permissions you once had to beg for.`,
-    cover: "/Permission Trap cover art (1).png",
-    category: "HUMAN BEHAVIOUR",
-    date: "May 5, 2025",
-    readTime: "8 min read",
-  },
-  {
-    id: 5,
-    title: "The Empty Cup: Why the Most Radical Thing You Can Do Is Stop Filling Up",
-    author: "Soozhee Low Pearce",
-    excerpt: "We keep pouring into already full cups. What happens when we stop?",
-    content: `We live in a culture that treats emptiness as a problem to be solved.
-
-Fill the diary. Fill the feed. Fill the silence. Fill the self.
-
-But an empty cup is not a deficit. It is capacity. It is the only condition in which something new can actually enter.
-
-The most radical act available to many of us right now is not to do more or optimise harder. It is to stop pouring — and allow the cup to empty.`,
-    cover: "/The Empty Cup cover art (1).png",
-    category: "PSYCHOLOGY",
-    date: "May 3, 2025",
-    readTime: "6 min read",
-  },
-  {
-    id: 6,
-    title: "The $850,000 T-Shirt: Why Your Closet Is the New Art Gallery",
-    author: "Soozhee Low Pearce",
-    excerpt: "Fashion has become the new status signal. And the price of entry keeps rising.",
-    content: `There are t-shirts that cost more than most people earn in a month. Handbags that cost more than cars. Sneakers that trade like assets.
-
-This is not simply about fashion. It is about status in a world where traditional markers of success have become either inaccessible or unfashionable.
-
-When housing, education and security feel out of reach, the closet becomes a more immediate stage for identity and belonging.
-
-The $850,000 t-shirt is not an aberration. It is a signal of how we are currently measuring worth.`,
-    cover: "/The $850000 t shirt cover art (1).png",
-    category: "SOCIETY",
-    date: "Apr 28, 2025",
-    readTime: "7 min read",
-  },
-];
-
 export default function Home() {
+  const [articles, setArticles] = useState<Article[]>([]);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // For now we hardcode the list while we finish the architecture.
+    // Later this will be fully dynamic.
+    async function loadArticles() {
+      try {
+        const res = await fetch('/api/articles');
+        if (res.ok) {
+          const data = await res.json();
+          setArticles(data);
+        } else {
+          // Temporary fallback while we set up the API route
+          setArticles([]);
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadArticles();
+  }, []);
 
   const openArticle = (article: Article) => {
     setSelectedArticle(article);
-    setIsExpanded(false); // always start with the short teaser
+    setIsExpanded(false);
   };
 
   const closeArticle = () => {
@@ -143,9 +55,26 @@ export default function Home() {
     setIsExpanded(false);
   };
 
+  // Temporary hardcoded list so the site still works while we finish the API
+  const tempArticles: Article[] = [
+    {
+      slug: 'tall-poppy-paradox',
+      title: 'The Tall Poppy Paradox and the Slow Erosion of the Australian Spirit',
+      author: 'Brian Pearce',
+      category: 'HUMAN BEHAVIOUR',
+      date: '2025-05-12',
+      readTime: '8 min read',
+      cover: '/Tall Poppy Article Cover Art (1).png',
+      excerpt: 'A joke that isn\'t quite a joke — and why it matters more than we admit.',
+      content: '', // will be loaded from markdown
+    },
+  ];
+
+  const displayArticles = articles.length > 0 ? articles : tempArticles;
+
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
-      {/* ===== TOP NAV ===== */}
+      {/* TOP NAV */}
       <nav className="border-b border-zinc-800/80 sticky top-0 z-40 bg-zinc-950/90 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-5 py-4 flex items-center justify-between">
           <div>
@@ -170,7 +99,7 @@ export default function Home() {
         </div>
       </nav>
 
-      {/* ===== HERO ===== */}
+      {/* HERO */}
       <section className="relative h-[75vh] min-h-[560px] flex items-center overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
@@ -197,7 +126,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== LATEST ARTICLES ===== */}
+      {/* LATEST ARTICLES */}
       <section className="py-14">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-end justify-between mb-6">
@@ -206,9 +135,9 @@ export default function Home() {
           </div>
 
           <div className="flex gap-5 overflow-x-auto pb-4 scrollbar-hide snap-x">
-            {articles.map((article) => (
+            {displayArticles.map((article) => (
               <div
-                key={article.id}
+                key={article.slug}
                 onClick={() => openArticle(article)}
                 className="flex-shrink-0 w-[220px] sm:w-[240px] md:w-[260px] cursor-pointer group snap-start"
               >
@@ -234,42 +163,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== HUMAN BEHAVIOUR ROW ===== */}
-      <section className="pb-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-end justify-between mb-5">
-            <h2 className="text-xl font-light tracking-wide">Human Behaviour</h2>
-            <a href="#" className="text-sm text-amber-400 hover:underline">View All</a>
-          </div>
-          <div className="flex gap-5 overflow-x-auto pb-2 scrollbar-hide">
-            {articles
-              .filter((a) => a.category === "HUMAN BEHAVIOUR")
-              .map((article) => (
-                <div
-                  key={article.id}
-                  onClick={() => openArticle(article)}
-                  className="flex-shrink-0 w-[200px] cursor-pointer group"
-                >
-                  <div className="overflow-hidden rounded-lg aspect-[3/4] bg-zinc-900">
-                    <img
-                      src={article.cover}
-                      alt={article.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                  </div>
-                  <h3 className="mt-2.5 text-sm leading-snug group-hover:text-amber-400 line-clamp-2">
-                    {article.title}
-                  </h3>
-                </div>
-              ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ===== DETAIL MODAL ===== */}
+      {/* DETAIL MODAL */}
       {selectedArticle && (
         <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
-          <div className="bg-zinc-950 max-w-5xl w-full max-h-[90vh] overflow-auto rounded-xl border border-zinc-800 relative">
+          <div className="bg-zinc-950 max-w-5xl w-full max-h-[92vh] overflow-hidden rounded-xl border border-zinc-800 relative flex flex-col md:flex-row">
+            
             <button
               onClick={closeArticle}
               className="absolute top-5 right-5 text-2xl z-20 hover:text-amber-400"
@@ -277,51 +175,54 @@ export default function Home() {
               ×
             </button>
 
-            <div className="grid md:grid-cols-2">
-              {/* Cover Image - stays portrait and clean */}
-              <div className="bg-zinc-900">
-                <img
-                  src={selectedArticle.cover}
-                  alt={selectedArticle.title}
-                  className="w-full h-full object-cover min-h-[380px] max-h-[90vh]"
-                />
+            {/* LEFT - Cover */}
+            <div className="md:w-1/2 bg-zinc-900 flex-shrink-0">
+              <img
+                src={selectedArticle.cover}
+                alt={selectedArticle.title}
+                className="w-full h-full object-cover min-h-[400px] md:min-h-full"
+              />
+            </div>
+
+            {/* RIGHT - Content */}
+            <div className="md:w-1/2 p-8 md:p-10 flex flex-col overflow-y-auto max-h-[92vh]">
+              <p className="text-xs tracking-widest text-amber-500 mb-3">
+                {selectedArticle.category}
+              </p>
+              <h1 className="text-2xl md:text-3xl font-light leading-tight mb-3">
+                {selectedArticle.title}
+              </h1>
+              <p className="text-zinc-400 text-sm mb-6">
+                By {selectedArticle.author} · {selectedArticle.date} · {selectedArticle.readTime}
+              </p>
+
+              <div className="prose prose-invert prose-amber max-w-none text-zinc-300 leading-relaxed mb-8 flex-1">
+                {isExpanded ? (
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {selectedArticle.content || selectedArticle.excerpt}
+                  </ReactMarkdown>
+                ) : (
+                  <p className="whitespace-pre-line">{selectedArticle.excerpt}</p>
+                )}
               </div>
 
-              {/* Content side */}
-              <div className="p-8 md:p-10 flex flex-col">
-                <p className="text-xs tracking-widest text-amber-500 mb-3">
-                  {selectedArticle.category}
-                </p>
-                <h1 className="text-2xl md:text-3xl font-light leading-tight mb-3">
-                  {selectedArticle.title}
-                </h1>
-                <p className="text-zinc-400 text-sm mb-6">
-                  By {selectedArticle.author} · {selectedArticle.date} · {selectedArticle.readTime}
-                </p>
+              <div className="flex flex-wrap gap-3 mb-6">
+                <button
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="bg-amber-500 hover:bg-amber-400 text-black px-6 py-3 rounded text-sm font-medium"
+                >
+                  {isExpanded ? "SHOW LESS" : "READ FULL ARTICLE"}
+                </button>
+                <button className="border border-zinc-600 hover:border-amber-400 px-6 py-3 rounded text-sm">
+                  DOWNLOAD PDF
+                </button>
+              </div>
 
-                {/* Teaser or Full content */}
-                <div className="text-zinc-300 leading-relaxed mb-8 flex-1 whitespace-pre-line text-[15px]">
-                  {isExpanded ? selectedArticle.content : selectedArticle.excerpt}
-                </div>
-
-                <div className="flex flex-wrap gap-3 mb-6">
-                  <button
-                    onClick={() => setIsExpanded(!isExpanded)}
-                    className="bg-amber-500 hover:bg-amber-400 text-black px-6 py-3 rounded text-sm font-medium"
-                  >
-                    {isExpanded ? "SHOW LESS" : "READ FULL ARTICLE"}
-                  </button>
-                  <button className="border border-zinc-600 hover:border-amber-400 px-6 py-3 rounded text-sm">
-                    DOWNLOAD PDF
-                  </button>
-                </div>
-
-                <div className="flex items-center gap-4 text-sm text-zinc-500">
-                  <span>Share</span>
-                  <a href="#" className="hover:text-amber-400">X</a>
-                  <a href="#" className="hover:text-amber-400">LinkedIn</a>
-                  <a href="#" className="hover:text-amber-400">Email</a>
-                </div>
+              <div className="flex items-center gap-4 text-sm text-zinc-500">
+                <span>Share</span>
+                <a href="#" className="hover:text-amber-400">X</a>
+                <a href="#" className="hover:text-amber-400">LinkedIn</a>
+                <a href="#" className="hover:text-amber-400">Email</a>
               </div>
             </div>
           </div>
