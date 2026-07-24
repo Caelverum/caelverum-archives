@@ -222,12 +222,14 @@ export default function Home() {
                 </button>
               </div>
 
-              <div className="flex items-center gap-4 text-sm text-zinc-500">
-                <span>Share</span>
-                <a href="#" className="hover:text-amber-400">X</a>
-                <a href="#" className="hover:text-amber-400">LinkedIn</a>
-                <a href="#" className="hover:text-amber-400">Email</a>
-              </div>
+             <div className="flex items-center gap-4 text-sm text-zinc-500">
+  <span>Share</span>
+  <a href="#" className="hover:text-amber-400">X</a>
+  <a href="#" className="hover:text-amber-400">LinkedIn</a>
+  <a href="#" className="hover:text-amber-400">Instagram</a>
+  <a href="#" className="hover:text-amber-400">Facebook</a>
+  <a href="#" className="hover:text-amber-400">Email</a>
+</div>
             </div>
           </div>
         </div>
