@@ -55,22 +55,7 @@ export default function Home() {
     setIsExpanded(false);
   };
 
-  // Temporary hardcoded list so the site still works while we finish the API
-  const tempArticles: Article[] = [
-    {
-      slug: 'tall-poppy-paradox',
-      title: 'The Tall Poppy Paradox and the Slow Erosion of the Australian Spirit',
-      author: 'Brian Pearce',
-      category: 'HUMAN BEHAVIOUR',
-      date: '2025-05-12',
-      readTime: '8 min read',
-      cover: '/Tall Poppy Article Cover Art (1).png',
-      excerpt: 'A joke that isn\'t quite a joke — and why it matters more than we admit.',
-      content: '', // will be loaded from markdown
-    },
-  ];
-
-  const displayArticles = articles.length > 0 ? articles : tempArticles;
+ const displayArticles = articles;
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
