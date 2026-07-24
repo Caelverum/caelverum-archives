@@ -18,6 +18,7 @@ type Article = {
   cover: string;
   excerpt: string;
   content: string;
+  archiveCode?: string;
 };
 
 function getArticle(slug: string): Article | null {
@@ -40,6 +41,7 @@ function getArticle(slug: string): Article | null {
     cover: data.cover || '',
     excerpt: data.excerpt || '',
     content,
+    archiveCode: data.archiveCode || '',
   };
 }
 
@@ -140,13 +142,19 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
             <h1 className="text-3xl md:text-4xl lg:text-[2.75rem] font-light leading-tight mb-5">
               {article.title}
             </h1>
-            <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-400 mb-10">
-              <span>By {article.author}</span>
-              <span>·</span>
-              <span>{article.date}</span>
-              <span>·</span>
-              <span>{article.readTime}</span>
-            </div>
+         <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-400 mb-10">
+  <span>By {article.author}</span>
+  <span>·</span>
+  <span>{article.date}</span>
+  <span>·</span>
+  <span>{article.readTime}</span>
+  {article.archiveCode && (
+    <>
+      <span>·</span>
+      <span className="tracking-wider text-zinc-500">{article.archiveCode}</span>
+    </>
+  )}
+</div>
 
             {/* Article Body */}
             <div className="text-zinc-300 leading-relaxed">
