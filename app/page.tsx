@@ -2,9 +2,18 @@
 
 import { useState } from 'react';
 
+type Article = {
+  id: number;
+  title: string;
+  author: string;
+  excerpt: string;
+  cover: string;
+};
+
 export default function Home() {
-const [selectedArticle, setSelectedArticle] = useState<any | null>(null);
-  const articles = [
+  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+
+  const articles: Article[] = [
     {
       id: 1,
       title: "The Tall Poppy Paradox and the Slow Erosion of the Australian Spirit",
@@ -43,9 +52,19 @@ const [selectedArticle, setSelectedArticle] = useState<any | null>(null);
         <h2 className="text-4xl mb-12">Latest Articles</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {articles.map((article) => (
-            <div key={article.id} onClick={() => setSelectedArticle(article)} className="cursor-pointer group">
-              <img src={article.cover} className="w-full aspect-video object-cover rounded-xl" />
-              <h3 className="mt-6 text-2xl group-hover:text-amber-400 transition-colors">{article.title}</h3>
+            <div
+              key={article.id}
+              onClick={() => setSelectedArticle(article)}
+              className="cursor-pointer group"
+            >
+              <img
+                src={article.cover}
+                className="w-full aspect-video object-cover rounded-xl"
+                alt={article.title}
+              />
+              <h3 className="mt-6 text-2xl group-hover:text-amber-400 transition-colors">
+                {article.title}
+              </h3>
               <p className="text-zinc-400 mt-2">{article.author}</p>
             </div>
           ))}
@@ -56,8 +75,17 @@ const [selectedArticle, setSelectedArticle] = useState<any | null>(null);
       {selectedArticle && (
         <div className="fixed inset-0 bg-black/95 flex items-center justify-center z-50 p-4">
           <div className="bg-zinc-900 max-w-4xl w-full max-h-[90vh] overflow-auto rounded-2xl">
-            <button onClick={() => setSelectedArticle(null)} className="float-right m-6 text-2xl">×</button>
-            <img src={selectedArticle.cover} className="w-full h-96 object-cover" />
+            <button
+              onClick={() => setSelectedArticle(null)}
+              className="float-right m-6 text-2xl"
+            >
+              ×
+            </button>
+            <img
+              src={selectedArticle.cover}
+              className="w-full h-96 object-cover"
+              alt={selectedArticle.title}
+            />
             <div className="p-12">
               <h1 className="text-5xl leading-tight">{selectedArticle.title}</h1>
               <p className="text-xl text-zinc-400 mt-6">{selectedArticle.author}</p>
