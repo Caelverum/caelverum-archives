@@ -5,6 +5,7 @@ category: "PSYCHOLOGY"
 date: "2025-05-10"
 readTime: "9 min read"
 cover: "/Mind Zillionaire Cover Art (1).png"
+archiveCode: "CA-MZ-001"
 excerpt: "On a yacht off the coast of Montenegro, a man named Julian watches monitors — not markets, but desalination plants and geothermal vents.
 
 His net worth is in the hundreds of millions, yet he owns almost nothing public. He lives in a state of \"surgical availability.\"
