@@ -196,20 +196,33 @@ export default function Home() {
                 By {selectedArticle.author} · {selectedArticle.date} · {selectedArticle.readTime}
               </p>
 
-             <div className="prose prose-invert max-w-none text-zinc-300 leading-relaxed mb-8 flex-1
-  prose-headings:text-white prose-headings:font-light prose-headings:tracking-tight
-  prose-h2:text-xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:text-amber-400
-  prose-h3:text-lg prose-h3:mt-8 prose-h3:mb-3 prose-h3:text-zinc-100
-  prose-p:mb-5 prose-p:leading-7
-  prose-strong:text-white prose-strong:font-medium
-  prose-blockquote:border-l-amber-500 prose-blockquote:bg-zinc-900/50 prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:rounded-r
-  prose-hr:hidden">
+            <div className="text-zinc-300 leading-relaxed mb-8 flex-1 article-content">
   {isExpanded ? (
-    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+    <ReactMarkdown
+      remarkPlugins={[remarkGfm]}
+      components={{
+        h2: ({node, ...props}) => (
+          <h2 className="text-xl md:text-2xl font-light text-amber-400 mt-10 mb-4 tracking-tight" {...props} />
+        ),
+        h3: ({node, ...props}) => (
+          <h3 className="text-lg font-medium text-white mt-8 mb-3" {...props} />
+        ),
+        p: ({node, ...props}) => (
+          <p className="mb-5 leading-7 text-[15px]" {...props} />
+        ),
+        strong: ({node, ...props}) => (
+          <strong className="text-white font-medium" {...props} />
+        ),
+        blockquote: ({node, ...props}) => (
+          <blockquote className="border-l-2 border-amber-500 bg-zinc-900/40 py-2 px-4 my-6 rounded-r text-zinc-300" {...props} />
+        ),
+        hr: () => null, // completely hide horizontal lines
+      }}
+    >
       {selectedArticle.content || selectedArticle.excerpt}
     </ReactMarkdown>
   ) : (
-    <div className="whitespace-pre-line leading-7">{selectedArticle.excerpt}</div>
+    <div className="whitespace-pre-line leading-7 text-[15px]">{selectedArticle.excerpt}</div>
   )}
 </div>
               <div className="flex flex-wrap gap-3 mb-6">
