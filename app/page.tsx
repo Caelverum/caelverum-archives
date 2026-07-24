@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 export default function Home() {
-  const [selectedArticle, setSelectedArticle] = useState(null);
+ const [selectedArticle, setSelectedArticle] = useState<any>(null);
 
   const articles = [
     {
