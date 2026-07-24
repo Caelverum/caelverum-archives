@@ -5,6 +5,7 @@ category: "HUMAN BEHAVIOUR"
 date: "2025-05-12"
 readTime: "8 min read"
 cover: "/Tall Poppy Article Cover Art (1).png"
+archiveCode: "CA-TP-001"
 excerpt: "It happens in a thousand small ways. A colleague gets promoted and someone mutters that she \"must have kissed the right arse.\" A mate buys a nice car and cops six months of \"look at Mr Fancy.\"
 
 We call this tall poppy syndrome, and mostly we treat it as harmless larrikin banter.
