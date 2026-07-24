@@ -196,16 +196,22 @@ export default function Home() {
                 By {selectedArticle.author} · {selectedArticle.date} · {selectedArticle.readTime}
               </p>
 
-              <div className="prose prose-invert prose-amber max-w-none text-zinc-300 leading-relaxed mb-8 flex-1">
-                {isExpanded ? (
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                    {selectedArticle.content || selectedArticle.excerpt}
-                  </ReactMarkdown>
-                ) : (
-                  <p className="whitespace-pre-line">{selectedArticle.excerpt}</p>
-                )}
-              </div>
-
+             <div className="prose prose-invert max-w-none text-zinc-300 leading-relaxed mb-8 flex-1
+  prose-headings:text-white prose-headings:font-light prose-headings:tracking-tight
+  prose-h2:text-xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:text-amber-400
+  prose-h3:text-lg prose-h3:mt-8 prose-h3:mb-3 prose-h3:text-zinc-100
+  prose-p:mb-5 prose-p:leading-7
+  prose-strong:text-white prose-strong:font-medium
+  prose-blockquote:border-l-amber-500 prose-blockquote:bg-zinc-900/50 prose-blockquote:py-1 prose-blockquote:px-4 prose-blockquote:rounded-r
+  prose-hr:hidden">
+  {isExpanded ? (
+    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+      {selectedArticle.content || selectedArticle.excerpt}
+    </ReactMarkdown>
+  ) : (
+    <div className="whitespace-pre-line leading-7">{selectedArticle.excerpt}</div>
+  )}
+</div>
               <div className="flex flex-wrap gap-3 mb-6">
                 <button
                   onClick={() => setIsExpanded(!isExpanded)}
