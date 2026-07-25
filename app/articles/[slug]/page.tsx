@@ -161,23 +161,23 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
               <ReactMarkdown
                 remarkPlugins={[remarkGfm]}
                 components={{
-                  h2: ({node, ...props}) => (
-                    <h2 className="text-2xl font-light text-amber-400 mt-12 mb-5 tracking-tight" {...props} />
-                  ),
-                  h3: ({node, ...props}) => (
-                    <h3 className="text-xl font-medium text-white mt-10 mb-4" {...props} />
-                  ),
-                  p: ({node, ...props}) => (
-                    <p className="mb-6 leading-8 text-[16px]" {...props} />
-                  ),
-                  strong: ({node, ...props}) => (
-                    <strong className="text-white font-medium" {...props} />
-                  ),
-                  blockquote: ({node, ...props}) => (
-                    <blockquote className="border-l-2 border-amber-500 bg-zinc-900/40 py-3 px-5 my-8 rounded-r text-zinc-300 italic" {...props} />
-                  ),
-                  hr: () => null,
-                }}
+  h2: ({node, ...props}) => (
+    <h2 className="text-2xl font-medium text-white mt-12 mb-5 tracking-tight" {...props} />
+  ),
+  h3: ({node, ...props}) => (
+    <h3 className="text-xl font-medium text-white mt-10 mb-4" {...props} />
+  ),
+  p: ({node, ...props}) => (
+    <p className="mb-6 leading-8 text-[16px] text-zinc-300" {...props} />
+  ),
+  strong: ({node, ...props}) => (
+    <strong className="font-normal text-zinc-300" {...props} />
+  ),
+  blockquote: ({node, ...props}) => (
+    <blockquote className="border-l-2 border-zinc-500 bg-zinc-900/40 py-3 px-5 my-8 rounded-r text-zinc-300 italic" {...props} />
+  ),
+  hr: () => null,
+}}
               >
                 {article.content}
               </ReactMarkdown>
