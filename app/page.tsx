@@ -37,6 +37,11 @@ export default function Home() {
     loadArticles();
   }, []);
 
+  // Get unique categories in the order they first appear
+  const categories = Array.from(
+    new Set(articles.map((a) => a.category).filter(Boolean))
+  );
+
   return (
     <div className="min-h-screen bg-zinc-950 text-white">
       {/* TOP NAV */}
@@ -128,37 +133,42 @@ export default function Home() {
         </div>
       </section>
 
-      {/* HUMAN BEHAVIOUR ROW */}
-      <section className="pb-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-end justify-between mb-5">
-            <h2 className="text-xl font-light tracking-wide">Human Behaviour</h2>
-            <a href="#" className="text-sm text-amber-400 hover:underline">View All</a>
-          </div>
-          <div className="flex gap-5 overflow-x-auto pb-2 scrollbar-hide">
-            {articles
-              .filter((a) => a.category === "HUMAN BEHAVIOUR")
-              .map((article) => (
-                <Link
-                  key={article.slug}
-                  href={`/articles/${article.slug}`}
-                  className="flex-shrink-0 w-[200px] cursor-pointer group"
-                >
-                  <div className="overflow-hidden rounded-lg aspect-[3/4] bg-zinc-900">
-                    <img
-                      src={article.cover}
-                      alt={article.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                  </div>
-                  <h3 className="mt-2.5 text-sm leading-snug group-hover:text-amber-400 line-clamp-2">
-                    {article.title}
-                  </h3>
-                </Link>
-              ))}
-          </div>
-        </div>
-      </section>
+      {/* DYNAMIC CATEGORY ROWS */}
+      {categories.map((category) => {
+        const categoryArticles = articles.filter((a) => a.category === category);
+        if (categoryArticles.length === 0) return null;
+
+        return (
+          <section key={category} className="pb-16">
+            <div className="max-w-7xl mx-auto px-6">
+              <div className="flex items-end justify-between mb-5">
+                <h2 className="text-xl font-light tracking-wide">{category}</h2>
+                <a href="#" className="text-sm text-amber-400 hover:underline">View All</a>
+              </div>
+              <div className="flex gap-5 overflow-x-auto pb-2 scrollbar-hide">
+                {categoryArticles.map((article) => (
+                  <Link
+                    key={article.slug}
+                    href={`/articles/${article.slug}`}
+                    className="flex-shrink-0 w-[200px] cursor-pointer group"
+                  >
+                    <div className="overflow-hidden rounded-lg aspect-[3/4] bg-zinc-900">
+                      <img
+                        src={article.cover}
+                        alt={article.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                      />
+                    </div>
+                    <h3 className="mt-2.5 text-sm leading-snug group-hover:text-amber-400 line-clamp-2">
+                      {article.title}
+                    </h3>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        );
+      })}
     </div>
   );
 }
